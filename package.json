@@ -1,0 +1,26 @@
+{
+  "name": "agreement-back-end",
+  "version": "0.0.1",
+  "description": "This application will hold all the back-end logic needed for Agreement",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayank-jain-02/agreement-back-end.git"
+  },
+  "author": "Mayank Jain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mayank-jain-02/agreement-back-end/issues"
+  },
+  "homepage": "https://github.com/mayank-jain-02/agreement-back-end#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongodb": "^2.2.31"
+  }
+}
