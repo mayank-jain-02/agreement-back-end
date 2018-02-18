@@ -46,33 +46,32 @@ router.get('/', function (req, res, next) {
 
 // saving an agreement.
 router.post('/save-agreement', function (req, res, next) {
-    const {
-        body
-    } = req;
+    const { body } = req;
 
-    var result = dbActions.saveAgreement(body);
-
-    res.json(result);
+    dbActions.saveAgreement(body)
+             .then((result) => res.json(result))
+             .catch((error) => console.error(error));
 });
 
 // getting all agreements.
-router.get('/get-all-agreement', function (req, res, next) {    
-    res.json(dbActions.getAllAgreement());
+router.get('/get-all-agreements', function (req, res, next) {    
+    dbActions.getAllAgreement()
+             .then((result) => res.json(result))
+             .catch((error) => console.error(error));
 });
 
 // updating an agreement.
 router.put('/update-agreement', function(req, res, next) {
-    const {
-        body
-    } = req;
-    res.json(body)
+    const { body } = req;
+
+    dbActions.updateAgreement(body)
+             .then((result) => res.json(result))
+             .catch((error) => console.error(error));             
 });
 
 // deleting an agreement.
 router.delete('/delete-agreement', function(req, res, next) {
-    const {
-        body
-    } = req;
+    const { body } = req;
 
     res.json({
         message: 'Agreement deleted successfully'    

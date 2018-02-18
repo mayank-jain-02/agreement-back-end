@@ -1,35 +1,19 @@
+var co = require('co');
 var MongoClient = require('mongodb').MongoClient;
 
 var connectDb = require('./db-connection');
-
-// const mongoUrl = 'mongodb://localhost:27017';
 var mlabUrl = 'mongodb://mayank:Admin123!@ds239638.mlab.com:39638/agreements';
 
 // saving agreement in database.
-const saveAgreement = (values) => {
-    MongoClient.connect(mlabUrl, function (error, db) {
-        if (error) {
-            console.error(error);
-            return;
-        }
+const saveAgreement = co.wrap(function* (values) {
+    const db = yield connectDb();
+    const response = yield db.collection('agreements').insert(values);
 
-        const collection = db.collection('agreements');
-
-        collection.insert(values, (error, result) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-
-            console.log('Agreement created successfully.')
-            db.close();
-            return result;
-        });
-    })
-}
+    return response;
+});
 
 // updating agreement in database.
-const updateAgreement = (values) => {
+const updateAgreement = co.wrap(function* (values) {
     const {
         _id,
         name,
@@ -39,38 +23,30 @@ const updateAgreement = (values) => {
         status
     } = values;
 
-    const db = connectDb();
-    const collection = db.collection('agreements');
+    console.log(values);
 
-    collection.updateOne({
-        _id
-    }, {
-        $set: {
-            name,
-            startDate,
-            endDate,
-            value,
-            status
-        }
-    }, (err, result) => {
-
-        console.log('Updated agreements');
-        db.close();
-        return result;
-    });
-}
+    const db = yield connectDb();
+    const collection = yield db.collection('agreements')
+        .updateOne({
+            name: 'rent agreement updated'
+        }, {
+            $set: {
+                name,
+                startDate,
+                endDate,
+                value,
+                status
+            }
+        });
+});
 
 // getting all the agreements from database.
-const getAllAgreement = (values) => {
-    connectDb().then(db => {
-        const collection = db.collection('agreements');
+const getAllAgreement = co.wrap(function* () {
+    const db = yield connectDb();
+    const res = yield db.collection('agreements').find({}).toArray();
 
-        collection.find({}).toArray((err, result) => {
-            console.log('Found the following agreements');                        
-            return result;
-        });
-    }).catch(error => console.error(error));
-}
+    return res;
+});
 
 // getting all the agreements from database.
 const getAgreement = (id) => {
