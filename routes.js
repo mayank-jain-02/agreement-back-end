@@ -3,42 +3,6 @@ var router = express.Router();
 
 var dbActions = require('./db-helper/db-actions');
 
-const agreements = [{
-    "name": "rent agreement",
-    "startDate": "17-02-2018",
-    "endDate": "17-03-2018",
-    "value": "7000",
-    "status": "Active"
-},
-{
-    "name": "shop agreement",
-    "startDate": "17-03-2018",
-    "endDate": "17-04-2018",
-    "value": "10000",
-    "status": "Active"
-},
-{
-    "name": "office agreement",
-    "startDate": "17-02-2018",
-    "endDate": "17-03-2018",
-    "value": "12000",
-    "status": "Active"
-}, {
-    "name": "school agreement",
-    "startDate": "17-01-2018",
-    "endDate": "17-05-2018",
-    "value": "8000",
-    "status": "Active"
-},
-{
-    "name": "home loan agreement",
-    "startDate": "17-01-2018",
-    "endDate": "16-02-2018",
-    "value": "15000",
-    "status": "Active"
-}
-];
-
 // get an agreement.
 router.get('/', function (req, res, next) {
 
@@ -70,17 +34,17 @@ router.put('/update-agreement', function(req, res, next) {
 });
 
 // deleting an agreement.
-router.delete('/delete-agreement', function(req, res, next) {
-    const { body } = req;
+router.delete('/delete-agreement/:name', function(req, res, next) {
+    const { params: { name } } = req;    
 
-    res.json({
-        message: 'Agreement deleted successfully'    
-    })
+    dbActions.deleteAgreement(name)
+        .then((result) => res.json(result))
+        .catch((error) => console.error(error));                 
 });
 
 // advance search of agreements
 router.post('/advance-search', function(req, res, next) {
-    res.json(agreements);
+    res.json({});
 });
 
 module.exports = router;

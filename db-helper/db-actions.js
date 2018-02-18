@@ -20,7 +20,8 @@ const updateAgreement = co.wrap(function* (values) {
         startDate,
         endDate,
         value,
-        status
+        status,
+        oldName
     } = values;
 
     console.log(values);
@@ -28,7 +29,7 @@ const updateAgreement = co.wrap(function* (values) {
     const db = yield connectDb();
     const collection = yield db.collection('agreements')
         .updateOne({
-            name: 'rent agreement updated'
+            name: oldName
         }, {
             $set: {
                 name,
@@ -63,17 +64,10 @@ const getAgreement = (id) => {
 }
 
 // deleting an agreement from database
-const deleteAgreement = (id) => {
-    const db = connectDb();
-    const collection = db.collection('agreements');
-
-    collection.deleteOne({
-        _id: id
-    }, (err, result) => {
-        console.log('Agreement deleted');
-        return true;
-    })
-}
+const deleteAgreement = co.wrap(function* (name) {
+    const db = yield connectDb();
+    const collection = yield db.collection('agreements').deleteOne({ name: name });
+});
 
 module.exports = {
     saveAgreement,
